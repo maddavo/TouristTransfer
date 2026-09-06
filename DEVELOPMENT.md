@@ -63,6 +63,10 @@ Verified on Windows on 2026-09-06:
   validate Unity destroyed-object behavior, native roster side effects,
   ModuleManager, IVA, UI layout, portraits or persistence.
 - Installation ZIP contents and packaged DLL hash are checked by build.ps1.
+- Follow-up 0.1.1 addresses a real-save finding: the inspected save uses
+  Contract Configurator `SpawnPassengers` contracts, whose names come from
+  `ConfiguredContract.KerbalNames()` rather than stock `TourismContract.Tourists`.
+  The UI now selects tourists before destinations and supports ship-view picking.
 
 In-game tests have not been performed. The game installation and saves have not
 been modified. This is an initial alpha, not a flight-validated release.

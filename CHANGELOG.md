@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.1.1 - 2026-09-06
+
+- Fixed identification for Contract Configurator contracts with spawned passengers.
+- Reordered the window so tourist selection comes before destination selection.
+- Added destination picking from the ship view via its part-action window.
+
 ## 0.1.0 - 2026-09-06 (initial alpha)
 
 - Added a crew-compartment Tourist Transfer part action via ModuleManager.

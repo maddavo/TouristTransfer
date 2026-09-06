@@ -1,11 +1,11 @@
 # TouristTransfer
 
 A KSP 1 mod for moving tourists between crew compartments on the same vessel,
-grouped by their **active stock tourism contracts**. Docked ships count as one
+grouped by their **active tourism contracts**. Docked ships count as one
 vessel. Select a whole contract or individual tourists, choose a destination,
 and transfer as many as will fit. Remaining tourists stay in the source.
 
-**Version 0.1.0: initial alpha.** Compiled against KSP 1.12.5; automated transfer
+**Version 0.1.1: initial alpha update.** Compiled against KSP 1.12.5; automated transfer
 tests pass. In-game acceptance testing is still required; this is not yet a
 flight-validated release.
 
@@ -39,8 +39,9 @@ releases its mouse-over flight-control lock.
 
 ## Scope and limitations
 
-- Stock `FinePrint.Contracts.TourismContract` only. Contract Configurator tourism
-  contracts are **not supported** in this version.
+- Stock `FinePrint.Contracts.TourismContract` is supported. Contract Configurator
+  contracts with spawned passengers are also read when CC is installed; CC is
+  optional.
 - One source and one destination per operation; no EVA, undocked-vessel transfer,
   swaps, overflow redistribution, or ordinary crew transfers.
 - Honors the stock part `crewTransferAvailable` flag. Does not implement

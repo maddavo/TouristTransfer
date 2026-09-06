@@ -27,12 +27,14 @@ namespace TouristTransfer
         private bool requested;
         private bool busy;
         private bool hidden;
+        private bool pickDestination;
 
         public void Awake()
         {
             Instance = this;
             GameEvents.onHideUI.Add(Hide);
             GameEvents.onShowUI.Add(Show);
+            GameEvents.onPartActionUIShown.Add(OnPartActionUIShown);
         }
 
         internal void Open(Part part)
@@ -77,8 +79,17 @@ namespace TouristTransfer
         {
             GameEvents.onHideUI.Remove(Hide);
             GameEvents.onShowUI.Remove(Show);
+            GameEvents.onPartActionUIShown.Remove(OnPartActionUIShown);
             Unlock();
             if (Instance == this) Instance = null;
+        }
+
+        private void OnPartActionUIShown(UIPartActionWindow ui, Part clickedPart)
+        {
+            if (!pickDestination || source == null || !KspTransferContext.ValidPair(source, clickedPart)) return;
+            destination = clickedPart;
+            pickDestination = false;
+            message = "Destination selected from the ship view: " + PartLabel(destination);
         }
 
         public void Update()
@@ -139,15 +150,7 @@ namespace TouristTransfer
             GUILayout.Label("Source: " + PartLabel(source));
             bool close = GUILayout.Button("Close", GUILayout.Width(65));
             GUILayout.EndHorizontal();
-            GUILayout.Label("Destination (module IDs distinguish identical parts):");
-            destinationScroll = GUILayout.BeginScrollView(destinationScroll, GUILayout.Height(110));
-            foreach (Part part in destinations)
-            {
-                int free = Math.Max(0, part.CrewCapacity - part.protoModuleCrew.Count);
-                if (GUILayout.Toggle(destination == part, PartLabel(part) + " - " + free + " free seats")) destination = part;
-            }
-            if (destinations.Count == 0) GUILayout.Label("No other transfer-enabled compartment on this vessel.");
-            GUILayout.EndScrollView();
+            GUILayout.Label("Select tourists by active contract:");
             crewScroll = GUILayout.BeginScrollView(crewScroll, GUILayout.MinHeight(70), GUILayout.ExpandHeight(true));
             foreach (TouristGroup group in groups)
             {
@@ -163,9 +166,23 @@ namespace TouristTransfer
                     if (GUILayout.Toggle(selected.Contains(key), "    " + crew.name)) selected.Add(key); else selected.Remove(key);
                 }
             }
-            if (groups.Count == 0) GUILayout.Label("No tourists from active stock tourism contracts in this compartment.");
-            if (otherCrew.Count > 0) GUILayout.Label("Other crew / no active stock tourism contract (not selectable):");
+            if (groups.Count == 0) GUILayout.Label("No tourists from active tourism contracts in this compartment.");
+            if (otherCrew.Count > 0) GUILayout.Label("Other crew / no active tourism contract (not selectable):");
             foreach (ProtoCrewMember crew in otherCrew) GUILayout.Label("    " + crew.name + " - " + crew.trait);
+            GUILayout.EndScrollView();
+            GUILayout.Label("Destination (module IDs distinguish identical parts):");
+            if (GUILayout.Button(pickDestination ? "Pick a destination in the ship view..." : "Pick destination from ship view"))
+            {
+                pickDestination = true;
+                message = "Open the destination part's action window in the ship view.";
+            }
+            destinationScroll = GUILayout.BeginScrollView(destinationScroll, GUILayout.Height(110));
+            foreach (Part part in destinations)
+            {
+                int free = Math.Max(0, part.CrewCapacity - part.protoModuleCrew.Count);
+                if (GUILayout.Toggle(destination == part, PartLabel(part) + " - " + free + " free seats")) destination = part;
+            }
+            if (destinations.Count == 0) GUILayout.Label("No other transfer-enabled compartment on this vessel.");
             GUILayout.EndScrollView();
             int selectedCount = groups.SelectMany(g => g.Crew.Where(c => selected.Contains(g.Key(c)))).Distinct().Count();
             int seats = destination == null ? 0 : Math.Max(0, destination.CrewCapacity - destination.protoModuleCrew.Count);

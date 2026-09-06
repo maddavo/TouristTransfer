@@ -110,7 +110,7 @@ internal static class AdapterTests
             var nonStock = new NonStockContract();
             nonStock.Tourists.Add("A");
             Contracts.ContractSystem.Instance.Active.Add(nonStock);
-            Check(StockContracts.Read(source).Count == 2, "non-stock subclasses are excluded");
+            Check(StockContracts.Read(source).Count == 3, "TourismContract subclasses remain supported");
             var selection = new HashSet<string> { groups[0].Key(a), groups[1].Key(b) };
             var context = new KspTransferContext(source, target, selection);
             Check(context.IsEligible(a) && !context.IsEligible(pilot), "adapter only permits selected active stock tourists");

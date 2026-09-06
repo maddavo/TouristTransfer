@@ -72,6 +72,8 @@ Verified on Windows on 2026-09-06:
   the runtime contract type. This targets the Hotel/quicksave #99 observation.
 - Follow-up 0.1.3 includes completed stock and Contract Configurator tourism
   contracts when their named tourists are still aboard, labelled `(completed)`.
+- Follow-up 0.1.4 fixes the screenshot's hash-only Contract Configurator label by
+  reading the inherited public KSP `Title` property first.
 
 In-game tests have not been performed. The game installation and saves have not
 been modified. This is an initial alpha, not a flight-validated release.

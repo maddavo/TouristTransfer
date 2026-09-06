@@ -81,17 +81,29 @@ namespace TouristTransfer
                     if (nameSet.Count == 0) continue;
                     var crew = source.protoModuleCrew.Where(c => c.type == ProtoCrewMember.KerbalType.Tourist && nameSet.Contains(c.name)).ToList();
                     if (crew.Count == 0) continue;
-                    var titleMethod = contractType.GetMethod("GetTitle", BindingFlags.Public | BindingFlags.Instance);
                     var hashMethod = contractType.GetMethod("GetHashString", BindingFlags.Public | BindingFlags.Instance);
                     var id = hashMethod == null ? contract.GetHashCode().ToString() : Convert.ToString(hashMethod.Invoke(contract, null));
-                    var title = titleMethod == null ? null : Convert.ToString(titleMethod.Invoke(contract, null));
-                    if (String.IsNullOrEmpty(title)) title = "Contract Configurator contract " + id;
+                    var title = ReadDisplayTitle(contract, contractType, id);
                     if (propertyName == "CompletedContracts") title += " (completed)";
                     groups.Add(new TouristGroup { Id = "CC:" + id, Title = title, Crew = crew });
                   }
                   catch (Exception) { /* Optional adapter must fail closed if CC changes its API. */ }
                 }
             }
+        }
+
+        private static string ReadDisplayTitle(object contract, Type contractType, string id)
+        {
+            // KSP exposes the user-facing title as the inherited Title property.
+            var titleProperty = contractType.GetProperty("Title", BindingFlags.Public | BindingFlags.Instance);
+            var title = titleProperty == null ? null : Convert.ToString(titleProperty.GetValue(contract, null));
+            if (!String.IsNullOrEmpty(title)) return title;
+            var titleMethod = contractType.GetMethod("GetTitle", BindingFlags.Public | BindingFlags.Instance);
+            title = titleMethod == null ? null : Convert.ToString(titleMethod.Invoke(contract, null));
+            if (!String.IsNullOrEmpty(title)) return title;
+            var subtype = contractType.GetProperty("subType", BindingFlags.Public | BindingFlags.Instance);
+            title = subtype == null ? null : Convert.ToString(subtype.GetValue(contract, null));
+            return String.IsNullOrEmpty(title) ? "Contract Configurator contract " + id : title;
         }
     }
 }

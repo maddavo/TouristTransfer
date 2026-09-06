@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.1.4 - 2026-09-06
+
+- Fixed Contract Configurator display names by reading the inherited KSP `Title`
+  property before using fallback identifiers.
+
 ## 0.1.3 - 2026-09-06
 
 - Completed stock and Contract Configurator tourism contracts remain available

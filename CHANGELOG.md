@@ -1,0 +1,14 @@
+# Changelog
+
+## 0.1.0 - 2026-09-06 (initial alpha)
+
+- Added a crew-compartment Tourist Transfer part action via ModuleManager.
+- Added active stock tourism-contract grouping with group/individual selection.
+- Added same-vessel destination selection, free-seat counts and capacity-limited
+  bulk transfers in source order.
+- Added live eligibility checks, rollback on rejected moves, per-crew stock
+  notifications, portrait refresh and window/input-lock cleanup.
+- Added standalone transaction regression tests and a local KSP build/package
+  script with warnings treated as errors.
+- Established README, SPEC and DEVELOPMENT continuation documentation.
+- In-game acceptance testing remains pending; not yet a validated game release.

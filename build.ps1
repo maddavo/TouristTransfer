@@ -33,7 +33,7 @@ foreach ($name in $references) {
 $arguments += @(Get-ChildItem (Join-Path $PSScriptRoot 'src') -Filter '*.cs' | ForEach-Object FullName)
 & $compiler $arguments
 if ($LASTEXITCODE -ne 0) { throw 'Plugin compilation failed.' }
-$package = Join-Path $PSScriptRoot 'dist\TouristTransfer-0.1.1'
+$package = Join-Path $PSScriptRoot 'dist\TouristTransfer-0.1.2'
 $pluginDir = Join-Path $package 'GameData\TouristTransfer\Plugins'
 New-Item -ItemType Directory -Force -Path $pluginDir | Out-Null
 Copy-Item -LiteralPath "$buildDir\TouristTransfer.dll" -Destination $pluginDir

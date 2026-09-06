@@ -174,7 +174,7 @@ namespace TouristTransfer
             if (GUILayout.Button(pickDestination ? "Pick a destination in the ship view..." : "Pick destination from ship view"))
             {
                 pickDestination = true;
-                message = "Open the destination part's action window in the ship view.";
+                message = "Right-click the destination part in the ship view, then its row will be selected here.";
             }
             destinationScroll = GUILayout.BeginScrollView(destinationScroll, GUILayout.Height(110));
             foreach (Part part in destinations)

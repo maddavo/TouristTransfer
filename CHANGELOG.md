@@ -1,5 +1,13 @@
 # Changelog
 
+## 0.1.2 - 2026-09-06
+
+- Fixed Contract Configurator passenger lookup by reading loaded
+  `SpawnPassengers` dictionaries as well as `KerbalNames()`.
+- Contract Configurator groups now use their real title when available, with a
+  descriptive ID fallback instead of the generic label.
+- Clarified that destination ship-view picking requires right-clicking the part.
+
 ## 0.1.1 - 2026-09-06
 
 - Fixed identification for Contract Configurator contracts with spawned passengers.

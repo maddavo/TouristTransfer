@@ -109,8 +109,14 @@ internal static class AdapterTests
             Contracts.ContractSystem.Instance.Finished.Add(contract);
             var completedGroups = StockContracts.Read(source);
             Check(completedGroups.Any(g => g.Crew.Contains(a) && g.Title.EndsWith("(completed)")), "completed tourism contract remains available for relocation");
+            var returnContract = new FinePrint.Contracts.TourismContract();
+            returnContract.Tourists.Add("A");
+            Contracts.ContractSystem.Instance.Active.Add(returnContract);
+            var deduplicated = StockContracts.Read(source);
+            Check(deduplicated.Count(g => g.Crew.Contains(a)) == 1 && deduplicated.Any(g => g.Crew.Contains(a) && !g.Title.EndsWith("(completed)")), "active contract takes precedence over completed duplicate");
             Contracts.ContractSystem.Instance.Finished.Remove(contract);
             Contracts.ContractSystem.Instance.Active.Add(contract);
+            Contracts.ContractSystem.Instance.Active.Remove(returnContract);
             Check(groups[0].Title == groups[1].Title && groups[0].Id != groups[1].Id, "identical contract titles keep distinct GUIDs");
             contract.Tourists.Clear();
             contract.Tourists.Add("a");

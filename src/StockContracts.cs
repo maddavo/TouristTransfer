@@ -39,7 +39,18 @@ namespace TouristTransfer
                     groups.Add(new TouristGroup { Id = contract.ContractGuid.ToString(), Title = contract.Title + " (completed)", Crew = crew });
             }
             ReadContractConfigurator(source, groups);
+            RemoveCompletedDuplicates(groups);
             return groups;
+        }
+
+        private static void RemoveCompletedDuplicates(List<TouristGroup> groups)
+        {
+            var currentNames = new HashSet<string>(
+                groups.Where(g => !g.Title.EndsWith("(completed)", StringComparison.Ordinal))
+                      .SelectMany(g => g.Crew).Select(c => c.name), StringComparer.Ordinal);
+            foreach (var group in groups.Where(g => g.Title.EndsWith("(completed)", StringComparison.Ordinal)).ToList())
+                group.Crew = group.Crew.Where(c => !currentNames.Contains(c.name)).ToList();
+            groups.RemoveAll(g => g.Crew.Count == 0);
         }
 
         private static void ReadContractConfigurator(Part source, List<TouristGroup> groups)

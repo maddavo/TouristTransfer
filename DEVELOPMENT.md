@@ -74,6 +74,8 @@ Verified on Windows on 2026-09-06:
   contracts when their named tourists are still aboard, labelled `(completed)`.
 - Follow-up 0.1.4 fixes the screenshot's hash-only Contract Configurator label by
   reading the inherited public KSP `Title` property first.
+- Follow-up 0.1.5 removes a tourist from completed groups when that tourist is
+  also present in any current group, matching the active-return-contract rule.
 
 In-game tests have not been performed. The game installation and saves have not
 been modified. This is an initial alpha, not a flight-validated release.

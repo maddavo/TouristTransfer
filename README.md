@@ -5,7 +5,7 @@ grouped by their **active or completed tourism contracts**. Docked ships count a
 vessel. Select a whole contract or individual tourists, choose a destination,
 and transfer as many as will fit. Remaining tourists stay in the source.
 
-**Version 0.1.4: initial alpha update.** Compiled against KSP 1.12.5; automated transfer
+**Version 0.1.5: initial alpha update.** Compiled against KSP 1.12.5; automated transfer
 tests pass. In-game acceptance testing is still required; this is not yet a
 flight-validated release.
 
@@ -31,6 +31,8 @@ flight-validated release.
 Multiple contracts can be selected together. Other crew and tourists without an
 active stock contract are listed but cannot be selected. After a partial move,
 remaining eligible tourists stay selected so you can choose another destination.
+When a tourist belongs to both a current and completed contract, the current
+contract is shown and the completed duplicate is hidden.
 
 The vessel must be active, loaded and unpacked; both compartments must permit
 crew transfer. Finish any stock item/crew transfer before using the button.

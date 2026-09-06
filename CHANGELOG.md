@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.1.5 - 2026-09-06
+
+- Completed-contract groups no longer duplicate tourists who are also in a
+  current contract; the current contract takes precedence.
+
 ## 0.1.4 - 2026-09-06
 
 - Fixed Contract Configurator display names by reading the inherited KSP `Title`

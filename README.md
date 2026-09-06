@@ -1,11 +1,11 @@
 # TouristTransfer
 
 A KSP 1 mod for moving tourists between crew compartments on the same vessel,
-grouped by their **active tourism contracts**. Docked ships count as one
+grouped by their **active or completed tourism contracts**. Docked ships count as one
 vessel. Select a whole contract or individual tourists, choose a destination,
 and transfer as many as will fit. Remaining tourists stay in the source.
 
-**Version 0.1.2: initial alpha update.** Compiled against KSP 1.12.5; automated transfer
+**Version 0.1.3: initial alpha update.** Compiled against KSP 1.12.5; automated transfer
 tests pass. In-game acceptance testing is still required; this is not yet a
 flight-validated release.
 

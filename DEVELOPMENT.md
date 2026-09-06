@@ -70,6 +70,8 @@ Verified on Windows on 2026-09-06:
 - Follow-up 0.1.2 reads Contract Configurator `SpawnPassengers.passengers`
   dictionaries when `KerbalNames()` is incomplete, and resolves the title from
   the runtime contract type. This targets the Hotel/quicksave #99 observation.
+- Follow-up 0.1.3 includes completed stock and Contract Configurator tourism
+  contracts when their named tourists are still aboard, labelled `(completed)`.
 
 In-game tests have not been performed. The game installation and saves have not
 been modified. This is an initial alpha, not a flight-validated release.

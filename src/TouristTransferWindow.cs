@@ -150,7 +150,7 @@ namespace TouristTransfer
             GUILayout.Label("Source: " + PartLabel(source));
             bool close = GUILayout.Button("Close", GUILayout.Width(65));
             GUILayout.EndHorizontal();
-            GUILayout.Label("Select tourists by active contract:");
+            GUILayout.Label("Select tourists by active or completed contract:");
             crewScroll = GUILayout.BeginScrollView(crewScroll, GUILayout.MinHeight(70), GUILayout.ExpandHeight(true));
             foreach (TouristGroup group in groups)
             {
@@ -166,7 +166,7 @@ namespace TouristTransfer
                     if (GUILayout.Toggle(selected.Contains(key), "    " + crew.name)) selected.Add(key); else selected.Remove(key);
                 }
             }
-            if (groups.Count == 0) GUILayout.Label("No tourists from active tourism contracts in this compartment.");
+            if (groups.Count == 0) GUILayout.Label("No tourists from active or completed tourism contracts in this compartment.");
             if (otherCrew.Count > 0) GUILayout.Label("Other crew / no active tourism contract (not selectable):");
             foreach (ProtoCrewMember crew in otherCrew) GUILayout.Label("    " + crew.name + " - " + crew.trait);
             GUILayout.EndScrollView();

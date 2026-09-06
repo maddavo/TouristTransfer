@@ -58,7 +58,10 @@ namespace Contracts
     {
         public static ContractSystem Instance;
         public List<FinePrint.Contracts.TourismContract> Active = new List<FinePrint.Contracts.TourismContract>();
+        public List<FinePrint.Contracts.TourismContract> Finished = new List<FinePrint.Contracts.TourismContract>();
         public T[] GetCurrentActiveContracts<T>() { return Active.OfType<T>().ToArray(); }
+        public T[] GetCurrentContracts<T>() { return Active.OfType<T>().ToArray(); }
+        public T[] GetCompletedContracts<T>() { return Finished.OfType<T>().ToArray(); }
     }
 }
 namespace FinePrint.Contracts
@@ -102,6 +105,12 @@ internal static class AdapterTests
             Contracts.ContractSystem.Instance.Active.AddRange(new[] { contract, second });
             var groups = StockContracts.Read(source);
             Check(groups.Count == 2 && groups[0].Crew.SequenceEqual(new[] { a }), "mapping limits groups to actual tourist occupants");
+            Contracts.ContractSystem.Instance.Active.Remove(contract);
+            Contracts.ContractSystem.Instance.Finished.Add(contract);
+            var completedGroups = StockContracts.Read(source);
+            Check(completedGroups.Any(g => g.Crew.Contains(a) && g.Title.EndsWith("(completed)")), "completed tourism contract remains available for relocation");
+            Contracts.ContractSystem.Instance.Finished.Remove(contract);
+            Contracts.ContractSystem.Instance.Active.Add(contract);
             Check(groups[0].Title == groups[1].Title && groups[0].Id != groups[1].Id, "identical contract titles keep distinct GUIDs");
             contract.Tourists.Clear();
             contract.Tourists.Add("a");

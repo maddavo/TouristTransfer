@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.1.3 - 2026-09-06
+
+- Completed stock and Contract Configurator tourism contracts remain available
+  for relocation while their tourists are still aboard.
+- Completed groups are labelled `(completed)`.
+
 ## 0.1.2 - 2026-09-06
 
 - Fixed Contract Configurator passenger lookup by reading loaded

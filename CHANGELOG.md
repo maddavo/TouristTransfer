@@ -1,5 +1,17 @@
 # Changelog
 
+## 0.1.7 - 2026-09-10
+
+- Narrowed the transfer window to 460 pixels and reduced its local font size.
+- Increased the tourist and destination list areas for easier selection.
+
+
+## 0.1.6 - 2026-09-08
+
+- A tourist now appears under one contract only. Current contracts take
+  precedence; when all matching contracts are completed, the latest completed
+  contract is shown.
+
 ## 0.1.5 - 2026-09-06
 
 - Completed-contract groups no longer duplicate tourists who are also in a

@@ -19,7 +19,8 @@ namespace TouristTransfer
         private List<Part> destinations = new List<Part>();
         private List<ProtoCrewMember> otherCrew = new List<ProtoCrewMember>();
         private readonly HashSet<string> selected = new HashSet<string>(StringComparer.Ordinal);
-        private Rect window = new Rect(100, 100, 560, 600);
+        private Rect window = new Rect(100, 100, 460, 720);
+        private GUISkin windowSkin;
         private Vector2 crewScroll;
         private Vector2 destinationScroll;
         private float nextRefresh;
@@ -32,6 +33,13 @@ namespace TouristTransfer
         public void Awake()
         {
             Instance = this;
+            windowSkin = Instantiate(HighLogic.Skin);
+            ReduceFont(windowSkin.label);
+            ReduceFont(windowSkin.button);
+            ReduceFont(windowSkin.toggle);
+            ReduceFont(windowSkin.window);
+            ReduceFont(windowSkin.box);
+            foreach (GUIStyle style in windowSkin.customStyles) ReduceFont(style);
             GameEvents.onHideUI.Add(Hide);
             GameEvents.onShowUI.Add(Show);
             GameEvents.onPartActionUIShown.Add(OnPartActionUIShown);
@@ -81,7 +89,13 @@ namespace TouristTransfer
             GameEvents.onShowUI.Remove(Show);
             GameEvents.onPartActionUIShown.Remove(OnPartActionUIShown);
             Unlock();
+            if (windowSkin != null) Destroy(windowSkin);
             if (Instance == this) Instance = null;
+        }
+
+        private static void ReduceFont(GUIStyle style)
+        {
+            if (style != null && style.fontSize > 0) style.fontSize = Math.Max(10, style.fontSize - 2);
         }
 
         private void OnPartActionUIShown(UIPartActionWindow ui, Part clickedPart)
@@ -135,9 +149,9 @@ namespace TouristTransfer
         {
             if (source == null || hidden) return;
             var previousSkin = GUI.skin;
-            GUI.skin = HighLogic.Skin;
-            window.width = Mathf.Min(560, Screen.width);
-            window.height = Mathf.Min(640, Screen.height);
+            GUI.skin = windowSkin == null ? HighLogic.Skin : windowSkin;
+            window.width = Mathf.Min(460, Screen.width);
+            window.height = Mathf.Min(720, Screen.height);
             window.x = Mathf.Clamp(window.x, 0, Mathf.Max(0, Screen.width - window.width));
             window.y = Mathf.Clamp(window.y, 0, Mathf.Max(0, Screen.height - window.height));
             window = GUILayout.Window(GetInstanceID(), window, DrawWindow, "Tourist Transfer - stock contracts");
@@ -151,7 +165,7 @@ namespace TouristTransfer
             bool close = GUILayout.Button("Close", GUILayout.Width(65));
             GUILayout.EndHorizontal();
             GUILayout.Label("Select tourists by active or completed contract:");
-            crewScroll = GUILayout.BeginScrollView(crewScroll, GUILayout.MinHeight(70), GUILayout.ExpandHeight(true));
+            crewScroll = GUILayout.BeginScrollView(crewScroll, GUILayout.Height(390));
             foreach (TouristGroup group in groups)
             {
                 int count = group.Crew.Count(c => selected.Contains(group.Key(c)));
@@ -176,7 +190,7 @@ namespace TouristTransfer
                 pickDestination = true;
                 message = "Right-click the destination part in the ship view, then its row will be selected here.";
             }
-            destinationScroll = GUILayout.BeginScrollView(destinationScroll, GUILayout.Height(110));
+            destinationScroll = GUILayout.BeginScrollView(destinationScroll, GUILayout.Height(180));
             foreach (Part part in destinations)
             {
                 int free = Math.Max(0, part.CrewCapacity - part.protoModuleCrew.Count);

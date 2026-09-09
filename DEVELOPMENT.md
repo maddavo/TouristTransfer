@@ -76,6 +76,12 @@ Verified on Windows on 2026-09-06:
   reading the inherited public KSP `Title` property first.
 - Follow-up 0.1.5 removes a tourist from completed groups when that tourist is
   also present in any current group, matching the active-return-contract rule.
+- Follow-up 0.1.6 resolves every duplicate membership: a current contract wins;
+  otherwise the later completed contract wins. This targets Rogas in quicksave
+  #109, who is retained only under the later 14-tourist Hotel contract.
+- Follow-up 0.1.7 adjusts only the window presentation: narrower width, smaller
+  local font and taller tourist/destination lists. Installation is intentionally
+  pending until KSP is confirmed closed.
 
 In-game tests have not been performed. The game installation and saves have not
 been modified. This is an initial alpha, not a flight-validated release.

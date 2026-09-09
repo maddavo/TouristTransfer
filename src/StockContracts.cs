@@ -12,6 +12,7 @@ namespace TouristTransfer
         internal string Id;
         internal string Title;
         internal List<ProtoCrewMember> Crew;
+        internal bool IsCompleted;
         internal string Key(ProtoCrewMember crew) { return Id + ":" + crew.name; }
     }
 
@@ -28,7 +29,7 @@ namespace TouristTransfer
                 var names = new HashSet<string>(contract.Tourists ?? new List<string>(), StringComparer.Ordinal);
                 var crew = source.protoModuleCrew.Where(c => c.type == ProtoCrewMember.KerbalType.Tourist && names.Contains(c.name)).ToList();
                 if (crew.Count > 0)
-                    groups.Add(new TouristGroup { Id = contract.ContractGuid.ToString(), Title = contract.Title, Crew = crew });
+                    groups.Add(new TouristGroup { Id = contract.ContractGuid.ToString(), Title = contract.Title, Crew = crew, IsCompleted = false });
             }
             foreach (var contract in ContractSystem.Instance.GetCompletedContracts<TourismContract>())
             {
@@ -36,20 +37,31 @@ namespace TouristTransfer
                 var names = new HashSet<string>(contract.Tourists ?? new List<string>(), StringComparer.Ordinal);
                 var crew = source.protoModuleCrew.Where(c => c.type == ProtoCrewMember.KerbalType.Tourist && names.Contains(c.name)).ToList();
                 if (crew.Count > 0)
-                    groups.Add(new TouristGroup { Id = contract.ContractGuid.ToString(), Title = contract.Title + " (completed)", Crew = crew });
+                    groups.Add(new TouristGroup { Id = contract.ContractGuid.ToString(), Title = contract.Title + " (completed)", Crew = crew, IsCompleted = true });
             }
             ReadContractConfigurator(source, groups);
-            RemoveCompletedDuplicates(groups);
+            ResolveDuplicateMembership(groups);
             return groups;
         }
 
-        private static void RemoveCompletedDuplicates(List<TouristGroup> groups)
+        private static void ResolveDuplicateMembership(List<TouristGroup> groups)
         {
-            var currentNames = new HashSet<string>(
-                groups.Where(g => !g.Title.EndsWith("(completed)", StringComparison.Ordinal))
-                      .SelectMany(g => g.Crew).Select(c => c.name), StringComparer.Ordinal);
-            foreach (var group in groups.Where(g => g.Title.EndsWith("(completed)", StringComparison.Ordinal)).ToList())
-                group.Crew = group.Crew.Where(c => !currentNames.Contains(c.name)).ToList();
+            // A roster entry has one identity even if stale Contract Configurator
+            // passenger records name it in several contracts. Current contracts win.
+            // When all candidates are completed, the later contract returned by KSP
+            // wins; completed contracts are maintained in chronological order.
+            var winners = new Dictionary<string, TouristGroup>(StringComparer.Ordinal);
+            foreach (var group in groups)
+                foreach (var crew in group.Crew)
+                {
+                    TouristGroup winner;
+                    if (!winners.TryGetValue(crew.name, out winner)
+                        || (!group.IsCompleted && winner.IsCompleted)
+                        || group.IsCompleted == winner.IsCompleted)
+                        winners[crew.name] = group;
+                }
+            foreach (var group in groups)
+                group.Crew = group.Crew.Where(c => winners[c.name] == group).ToList();
             groups.RemoveAll(g => g.Crew.Count == 0);
         }
 
@@ -95,8 +107,9 @@ namespace TouristTransfer
                     var hashMethod = contractType.GetMethod("GetHashString", BindingFlags.Public | BindingFlags.Instance);
                     var id = hashMethod == null ? contract.GetHashCode().ToString() : Convert.ToString(hashMethod.Invoke(contract, null));
                     var title = ReadDisplayTitle(contract, contractType, id);
-                    if (propertyName == "CompletedContracts") title += " (completed)";
-                    groups.Add(new TouristGroup { Id = "CC:" + id, Title = title, Crew = crew });
+                    var isCompleted = propertyName == "CompletedContracts";
+                    if (isCompleted) title += " (completed)";
+                    groups.Add(new TouristGroup { Id = "CC:" + id, Title = title, Crew = crew, IsCompleted = isCompleted });
                   }
                   catch (Exception) { /* Optional adapter must fail closed if CC changes its API. */ }
                 }

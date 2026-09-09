@@ -41,12 +41,13 @@ Copy-Item -LiteralPath (Join-Path $PSScriptRoot 'GameData\TouristTransfer\Touris
 foreach ($doc in @('README.md', 'SPEC.md', 'CHANGELOG.md', 'DEVELOPMENT.md')) {
     Copy-Item -LiteralPath (Join-Path $PSScriptRoot $doc) -Destination $package
 }
+Copy-Item -LiteralPath (Join-Path $PSScriptRoot 'LICENSE') -Destination $package
 $zip = "$package.zip"
 Compress-Archive -Path (Join-Path $package '*') -DestinationPath $zip -Force
 Add-Type -AssemblyName System.IO.Compression.FileSystem
 $archive = [System.IO.Compression.ZipFile]::OpenRead($zip)
 try {
-    $expected = @('CHANGELOG.md', 'DEVELOPMENT.md', 'README.md', 'SPEC.md', 'GameData/TouristTransfer/TouristTransfer.cfg', 'GameData/TouristTransfer/Plugins/TouristTransfer.dll')
+    $expected = @('CHANGELOG.md', 'DEVELOPMENT.md', 'LICENSE', 'README.md', 'SPEC.md', 'GameData/TouristTransfer/TouristTransfer.cfg', 'GameData/TouristTransfer/Plugins/TouristTransfer.dll')
     $actual = @($archive.Entries | Where-Object { $_.Name } | ForEach-Object { $_.FullName.Replace('\', '/') })
     if (Compare-Object ($expected | Sort-Object) ($actual | Sort-Object)) { throw 'Unexpected package contents.' }
     $entry = $archive.Entries | Where-Object { $_.FullName.Replace('\', '/') -eq 'GameData/TouristTransfer/Plugins/TouristTransfer.dll' }

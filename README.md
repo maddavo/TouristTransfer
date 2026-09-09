@@ -12,6 +12,7 @@ flight-validated release.
 ## Requirements and installation
 
 - KSP **1.12.5** (initial supported target).
+- Source code is licensed under the MIT License.
 - [ModuleManager](https://github.com/sarbian/ModuleManager) **4.2.3**, installed
   separately. Do not install a second copy if your game already has it.
 - Extract the package's `GameData/TouristTransfer` folder into KSP's `GameData`.
